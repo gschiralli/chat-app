@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { Check, UserPlus, X } from "lucide-react";
 import { FC, useState } from "react";
 
@@ -14,6 +15,14 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   const [friendRequests, setFriendRequests] = useState<IncomingFriendRequest[]>(
     incomingFriendRequests
   );
+
+  const acceptFriend = async (senderId: string) => {
+    await axios.post("/api/requests/accept", { id: senderId });
+
+    setFriendRequests((prev) =>
+      prev.filter((request) => request.senderId !== senderId)
+    );
+  };
   return (
     <>
       {friendRequests.length === 0 ? (
