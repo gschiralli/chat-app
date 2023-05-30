@@ -1,3 +1,4 @@
+import { Icon, Icons } from "@/components/Icons";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -11,7 +12,6 @@ import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
 import SidebarChatList from "@/components/SidebarChatList";
 import MobileChatLayout from "@/components/MobileChatLayout";
 import { SidebarOption } from "@/types/typings";
-import { Icons } from "./../../../components/Icons";
 
 interface LayoutProps {
   children: ReactNode;
