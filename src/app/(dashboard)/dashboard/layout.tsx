@@ -1,4 +1,4 @@
-import { Icon, Icons } from "@/components/Icons";
+import { Icons } from "@/components/Icons";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
