@@ -42,6 +42,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
           href="/dashboard"
           className={buttonVariants({ variant: "ghost" })}
         >
+          {/* <Icons.Logo className="h-6 w-auto text-indigo-600" /> */}
           <Icons.Logo className="h-6 w-auto text-indigo-600" />
         </Link>
         <Button onClick={() => setOpen(true)} className="gap-4">
