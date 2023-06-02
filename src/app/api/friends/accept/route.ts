@@ -39,17 +39,31 @@ export async function POST(req: Request) {
     if (!hasFriendRequest) {
       return new Response("No friend request", { status: 400 });
     }
-    pusherServer.trigger(
-      toPusherKey(`user:${idToAdd}:friends`),
-      "new-friend",
-      {}
-    );
 
-    await db.sadd(`user:${session.user.id}:friends`, idToAdd);
+    const [userRaw, friendRaw] = (await Promise.all([
+      fetchRedis("get", `user:${session.user.id}`),
+      fetchRedis("get", `user:${idToAdd}`),
+    ])) as [string, string];
 
-    await db.sadd(`user:${idToAdd}:friends`, session.user.id);
+    const user = JSON.parse(userRaw) as User;
+    const friend = JSON.parse(friendRaw) as User;
 
-    await db.srem(`user:${session.user.id}:incoming_friend_requests`, idToAdd);
+    await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${idToAdd}:friends`),
+        "new-friend",
+        user
+      ),
+      pusherServer.trigger(
+        toPusherKey(`user:${session.user.id}:friends`),
+        "new-friend",
+        friend
+      ),
+      db.sadd(`user:${session.user.id}:friends`, idToAdd),
+      db.sadd(`user:${idToAdd}:friends`, session.user.id),
+      db.srem(`user:${session.user.id}:incoming_friend_requests`, idToAdd),
+    ]);
+
     return new Response("OK");
   } catch (error) {
     if (error instanceof z.ZodError) {
